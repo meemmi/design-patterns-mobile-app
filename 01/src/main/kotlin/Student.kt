@@ -1,39 +1,24 @@
 package org.example
 
 class Student(name: String, age: Int): Human(name, initialAge = age) {
-    var courses = mutableListOf<CourseRecord>()
+    val courses = mutableListOf<CourseRecord>()
 
-    fun addCourse(course: CourseRecord) {
-        courses.add(course)
-    }
+    fun addCourse(course: CourseRecord) = courses.add(course)
+
 
     fun weightedAverage(): Double {
-        var weightedSum = 0.0
-        var totalCredits = 0.0
+        val totalCredits = courses.sumOf { it.credits }
+        if (totalCredits == 0) return 0.0
 
-        for (course in courses) {
-            weightedSum += course.grade * course.credits
-            totalCredits += course.credits
-        }
-
-        if (totalCredits == 0.0) return 0.0
-
+        val weightedSum = courses.sumOf { it.grade * it.credits }
         return weightedSum / totalCredits
     }
 
     fun weightedAverage(year: Int): Double {
-        var weightedSum = 0.0
-        var totalCredits = 0.0
+        val totalCredits = courses.filter { it.yearCompleted == year }.sumOf { it.credits }
+        if (totalCredits == 0) return 0.0
 
-        for (course in courses) {
-            if (course.yearCompleted == year) {
-                weightedSum += course.grade * course.credits
-                totalCredits += course.credits
-            }
-        }
-
-        if (totalCredits == 0.0) return 0.0
-
+        val weightedSum = courses.filter { it.yearCompleted == year }.sumOf { it.grade * it.credits  }
         return weightedSum / totalCredits
     }
 
